@@ -3,16 +3,37 @@ import { toRadians } from "../math_util";
 import { device, canvas, fovYDegrees, aspectRatio } from "../renderer";
 
 class CameraUniforms {
-    readonly buffer = new ArrayBuffer(16 * 4);
+    readonly buffer = new ArrayBuffer(56 * 4);
     private readonly floatView = new Float32Array(this.buffer);
 
     set viewProjMat(mat: Float32Array) {
-        // TODO-1.1: set the first 16 elements of `this.floatView` to the input `mat`
         for(let i = 0; i < 16; i++) {
             this.floatView[i] = mat[i];
         }
     }
 
+    set inverseProjMat(mat: Float32Array) {
+        for(let i = 0; i < 16; i++) {
+            this.floatView[i+16] = mat[i];
+        }
+    }
+
+    set inverseViewProjMat(mat: Float32Array) {
+        for(let i = 0; i < 16; i++) {
+            this.floatView[i+32] = mat[i];
+        }
+    }
+
+    set resolution(val: Float32Array) {
+        this.floatView[48 + 0] = val[0];
+        this.floatView[48 + 1] = val[1];
+    }
+
+    set position(val: Float32Array) {
+        this.floatView[52 + 0] = val[0];
+        this.floatView[52 + 1] = val[1];
+        this.floatView[52 + 2] = val[2];
+    }
     // TODO-2: add extra functions to set values needed for light clustering here
 }
 
@@ -132,6 +153,10 @@ export class Camera {
         }
     }
 
+    updateResolution(newRes: Float32Array) {
+        this.uniforms.resolution = newRes;
+    }
+
     onFrame(deltaTime: number) {
         this.processInput(deltaTime);
 
@@ -140,7 +165,9 @@ export class Camera {
         const viewProjMat = mat4.mul(this.projMat, viewMat);
         // TODO-1.1: set `this.uniforms.viewProjMat` to the newly calculated view proj mat
         this.uniforms.viewProjMat = viewProjMat;
-
+        this.uniforms.inverseProjMat = mat4.inverse(this.projMat);
+        this.uniforms.inverseViewProjMat = mat4.inverse(viewProjMat);
+        this.uniforms.position = new Float32Array([this.cameraPos[0], this.cameraPos[1], this.cameraPos[2]]);
 
         // TODO-2: write to extra buffers needed for light clustering here
 

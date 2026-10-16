@@ -18,5 +18,6 @@ export class ClusteredDeferredRenderer extends renderer.Renderer {
         // - run the clustering compute shader
         // - run the G-buffer pass, outputting position, albedo, and normals
         // - run the fullscreen pass, which reads from the G-buffer and performs lighting calculations
+        
     }
 }

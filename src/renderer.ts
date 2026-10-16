@@ -134,6 +134,7 @@ export abstract class Renderer {
 
         let deltaTime = time - this.prevTime;
         this.camera.onFrame(deltaTime);
+        this.camera.updateResolution(new Float32Array([canvas.width, canvas.height]));
         this.lights.onFrame(time);
 
         this.stats.begin();
