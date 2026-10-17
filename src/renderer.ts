@@ -124,6 +124,9 @@ export abstract class Renderer {
     private frameRequestId: number;
 
     constructor(stage: Stage) {
+        this.currFrame = 0;
+        this.accumTime = 0.0;
+
         this.scene = stage.scene;
         this.lights = stage.lights;
         this.camera = stage.camera;
@@ -139,6 +142,8 @@ export abstract class Renderer {
     protected abstract draw(): void;
 
     // CHECKITOUT: this is the main rendering loop
+    currFrame: number;
+    accumTime: number;
     private onFrame(time: number) {
         if (this.prevTime == 0) {
             this.prevTime = time;
@@ -157,5 +162,13 @@ export abstract class Renderer {
 
         this.prevTime = time;
         this.frameRequestId = requestAnimationFrame((t) => this.onFrame(t));
+    
+        this.currFrame++;
+        this.accumTime += deltaTime;
+        if(this.accumTime >= 4000) {
+            console.log("Avg Frametime in MS: " + this.accumTime/this.currFrame);
+            this.currFrame = 0;
+            this.accumTime = 0.0;
+        }
     }
 }

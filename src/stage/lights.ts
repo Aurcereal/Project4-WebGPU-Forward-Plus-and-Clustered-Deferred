@@ -43,13 +43,15 @@ function hueToRgb(h: number) {
 
 export class Lights {
     // private clusters: Clusters = new Clusters();
+    static readonly clusterDim = new Uint32Array([20,20,10]);
+    maxLightsPerCluster = 400;
+
     private camera: Camera;
 
     numLights = 500;
     static readonly maxNumLights = 5000;
     static readonly numFloatsPerLight = 8; // vec3f is aligned at 16 byte boundaries
     static readonly numFloatsPerCluster = 8;
-    static readonly clusterDim = new Uint32Array([20,20,10]);
     static readonly clusterCount = Lights.clusterDim[0]*Lights.clusterDim[1]*Lights.clusterDim[2];
 
     static readonly lightIntensity = 0.1;
@@ -142,7 +144,7 @@ export class Lights {
 
         this.clusterLightIDsStorageBuffer = device.createBuffer({
             label: "cluster light IDs",
-            size: 16 + (Lights.maxNumLights * Lights.clusterCount * 4), // TODO: decrease size to reasonable max
+            size: 16 + (this.maxLightsPerCluster * Lights.clusterCount * 4),
             usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST
         });
         this.resetClusterLightIDs();
@@ -229,6 +231,15 @@ export class Lights {
 
     updateClusterSetUniforms() {
         device.queue.writeBuffer(this.clusterSetStorageBuffer, 0, Lights.clusterDim);
+    }
+
+    updateMaxLightsPerCluster() {
+        this.clusterLightIDsStorageBuffer = device.createBuffer({
+            label: "cluster light IDs",
+            size: 16 + (this.maxLightsPerCluster * Lights.clusterCount * 4),
+            usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST
+        });
+        this.resetClusterLightIDs();
     }
 
     resetClusterLightIDs() {

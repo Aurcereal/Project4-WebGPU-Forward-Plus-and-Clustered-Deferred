@@ -38,7 +38,7 @@ export class ForwardPlusRenderer extends renderer.Renderer {
                 {
                     binding: 3,
                     visibility: GPUShaderStage.FRAGMENT,
-                    buffer: {type: "read-only-storage"}
+                    buffer: {type: "storage"}
                 }
             ]
         });
@@ -75,7 +75,7 @@ export class ForwardPlusRenderer extends renderer.Renderer {
 
         this.pipeline = renderer.device.createRenderPipeline({
             layout: renderer.device.createPipelineLayout({
-                label: "naive pipeline layout",
+                label: "forward+ pipeline layout",
                 bindGroupLayouts: [
                     this.sceneUniformsBindGroupLayout,
                     renderer.modelBindGroupLayout,
@@ -96,7 +96,7 @@ export class ForwardPlusRenderer extends renderer.Renderer {
             },
             fragment: {
                 module: renderer.device.createShaderModule({
-                    label: "naive frag shader",
+                    label: "forward+ frag shader",
                     code: shaders.forwardPlusFragSrc,
                 }),
                 targets: [

@@ -18,7 +18,7 @@
 @group(${bindGroup_scene}) @binding(0) var<uniform> camera: CameraUniforms;
 @group(${bindGroup_scene}) @binding(1) var<storage, read> lightSet: LightSet;
 @group(${bindGroup_scene}) @binding(2) var<storage, read> clusterSet: ClusterSet;
-@group(${bindGroup_scene}) @binding(3) var<storage, read> clusterLightIDs: ClusterLightIDs;
+@group(${bindGroup_scene}) @binding(3) var<storage, read_write> clusterLightIDs: ClusterLightIDs;
 
 @group(${bindGroup_material}) @binding(0) var diffuseTex: texture_2d<f32>;
 @group(${bindGroup_material}) @binding(1) var diffuseTexSampler: sampler;
@@ -62,21 +62,9 @@ fn main(in: FragmentInput) -> @location(0) vec4f
         totalLight += calculateLightContrib(light, in.pos, normalize(in.nor));
     }
 
-    // let clusterId3Norm = vec3f(clusterId3)/vec3f(clusterSet.clusterDim);
-    // let ndc = vec4f((clusterId3Norm.xy*2.0-1.0), 0.0, 1.0);
-    // var worldPos = camera.inverseViewProj * ndc;
-    // worldPos /= worldPos.w;
-    // let rd = normalize(worldPos.xyz-camera.position);
+    // let lightDisplay = f32(clusterSet.clusters[clusterIdx].lightCount)/f32(lightSet.numLights);
+    // return vec4f(vec3f(lightDisplay, 0.0, 0.0), 1.0);
 
-    // var fo = camera.inverseViewProj * vec4f(0.0,0.0,0.0,1.0);
-    // fo /= fo.w;
-    // let forward = normalize(fo.xyz-camera.position);
-
-    // let depth = getClusterDepth(clusterId3Norm.z);
-    // let pos = camera.position + rd*depth/dot(rd, forward);
-
-    // col = vec3f(clusterDepth*0.1, tile.x*0.1, tile.y*0.1);
-    // //col = vec3f(pos);
     var col = diffuseColor.rgb * totalLight;
     return vec4(col, 1.0);
 
