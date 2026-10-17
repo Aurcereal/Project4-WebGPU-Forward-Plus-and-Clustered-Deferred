@@ -101,6 +101,18 @@ export const vertexBufferLayout: GPUVertexBufferLayout = {
     ]
 };
 
+// For fullscreen pass
+export const minimal2DVertexBufferLayout: GPUVertexBufferLayout = {
+    arrayStride: 8,
+    attributes: [
+        {
+            format: "float32x2",
+            offset: 0,
+            shaderLocation: 0
+        }
+    ]
+}
+
 export abstract class Renderer {
     protected scene: Scene;
     protected lights: Lights;

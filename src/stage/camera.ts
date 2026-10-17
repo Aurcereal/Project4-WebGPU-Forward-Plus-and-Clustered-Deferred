@@ -3,7 +3,7 @@ import { toRadians } from "../math_util";
 import { device, canvas, fovYDegrees, aspectRatio } from "../renderer";
 
 class CameraUniforms {
-    readonly buffer = new ArrayBuffer(56 * 4);
+    readonly buffer = new ArrayBuffer(72 * 4);
     private readonly floatView = new Float32Array(this.buffer);
 
     set viewProjMat(mat: Float32Array) {
@@ -12,27 +12,38 @@ class CameraUniforms {
         }
     }
 
-    set inverseProjMat(mat: Float32Array) {
+    set viewMat(mat: Float32Array) {
         for(let i = 0; i < 16; i++) {
             this.floatView[i+16] = mat[i];
         }
     }
 
-    set inverseViewProjMat(mat: Float32Array) {
+    set inverseProjMat(mat: Float32Array) {
         for(let i = 0; i < 16; i++) {
             this.floatView[i+32] = mat[i];
         }
     }
 
+    set inverseViewProjMat(mat: Float32Array) {
+        for(let i = 0; i < 16; i++) {
+            this.floatView[i+48] = mat[i];
+        }
+    }
+
     set resolution(val: Float32Array) {
-        this.floatView[48 + 0] = val[0];
-        this.floatView[48 + 1] = val[1];
+        this.floatView[64 + 0] = val[0];
+        this.floatView[64 + 1] = val[1];
+    }
+
+    set clipPlanes(val: Float32Array) {
+        this.floatView[64 + 2] = val[0];
+        this.floatView[64 + 3] = val[1];
     }
 
     set position(val: Float32Array) {
-        this.floatView[52 + 0] = val[0];
-        this.floatView[52 + 1] = val[1];
-        this.floatView[52 + 2] = val[2];
+        this.floatView[68 + 0] = val[0];
+        this.floatView[68 + 1] = val[1];
+        this.floatView[68 + 2] = val[2];
     }
     // TODO-2: add extra functions to set values needed for light clustering here
 }
@@ -69,7 +80,8 @@ export class Camera {
             label: "camera uniform buffer",
             size: this.uniforms.buffer.byteLength,
             usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST
-        })
+        });
+        this.uniforms.clipPlanes = new Float32Array([Camera.nearPlane, Camera.farPlane]);
         this.projMat = mat4.perspective(toRadians(fovYDegrees), aspectRatio, Camera.nearPlane, Camera.farPlane);
 
         this.rotateCamera(0, 0); // set initial camera vectors
@@ -165,6 +177,7 @@ export class Camera {
         const viewProjMat = mat4.mul(this.projMat, viewMat);
         // TODO-1.1: set `this.uniforms.viewProjMat` to the newly calculated view proj mat
         this.uniforms.viewProjMat = viewProjMat;
+        this.uniforms.viewMat = viewMat;
         this.uniforms.inverseProjMat = mat4.inverse(this.projMat);
         this.uniforms.inverseViewProjMat = mat4.inverse(viewProjMat);
         this.uniforms.position = new Float32Array([this.cameraPos[0], this.cameraPos[1], this.cameraPos[2]]);
