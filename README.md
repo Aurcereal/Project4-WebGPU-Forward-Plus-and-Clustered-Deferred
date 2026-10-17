@@ -13,7 +13,7 @@ WebGPU Forward+ and Clustered Deferred Shading
 
 ### Results
 
-https://github.com/user-attachments/assets/c22ad76e-8505-435e-915f-56a1a9bf945d
+https://github.com/user-attachments/assets/2c8909fc-0827-43d8-b11d-ae97a991f694
 
 ![](ShowcaseMedia/visualScreenshot2.png)
 
