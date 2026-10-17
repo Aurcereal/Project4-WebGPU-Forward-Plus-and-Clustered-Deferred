@@ -29,9 +29,11 @@ struct ClusterLightIDs {
 
 struct CameraUniforms {
     viewProj: mat4x4f,
+    view: mat4x4f,
     inverseProj: mat4x4f,
     inverseViewProj: mat4x4f,
     resolution: vec2f,
+    clipPlanes: vec2f,
     position: vec3f,
 }
 
@@ -61,9 +63,9 @@ fn getClusterId1(clusterId3: vec3u, clusterDim: vec3u) -> u32 {
 }
 
 fn getClusterDepthID(z: f32, zClusterCount: u32) -> f32 {
-    return floor(f32(zClusterCount)*saturate((z-0.1)/10.0));
+    return floor(f32(zClusterCount)*saturate((z-${clusterLowerZBound})/(${clusterUpperZBound}-${clusterLowerZBound})));
 }
 
 fn getClusterDepth(normZ: f32) -> f32 {
-    return normZ*10.0+0.1;
+    return mix(${clusterLowerZBound}, ${clusterUpperZBound}, normZ);//normZ*10.0+0.1;
 }
