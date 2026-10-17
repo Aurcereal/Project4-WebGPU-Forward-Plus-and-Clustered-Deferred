@@ -27,6 +27,10 @@ Forward+ is like forward, but has a precomputation every frame which splits the 
 
 Clustered Deferred is deferred rendering, but we use the same cluster pre-pass as in Forward+.
 
+| ![](ShowcaseMedia/clusterBbxDisplay.png) |
+ | --- |
+| Display of the positions of the clusters fragments are in. |
+
 ## Performance Analysis
 
 ![](ShowcaseMedia/Render%20Time%20w_%20Naive%20vs%20Forward+%20vs%20Clustered%20Deferred.png)
