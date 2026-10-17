@@ -1,4 +1,4 @@
-WebGL Forward+ and Clustered Deferred Shading
+WebGPU Forward+ and Clustered Deferred Shading
 ================
 
 **University of Pennsylvania, CIS 565: GPU Programming and Architecture, Project 4**
@@ -12,6 +12,8 @@ WebGL Forward+ and Clustered Deferred Shading
 [Live Chrome Demo](https://aurcereal.github.io/Project4-WebGPU-Forward-Plus-and-Clustered-Deferred/)
 
 ### Results
+
+https://github.com/user-attachments/assets/c22ad76e-8505-435e-915f-56a1a9bf945d
 
 ![](ShowcaseMedia/visualScreenshot2.png)
 
